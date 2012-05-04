@@ -25,6 +25,8 @@
 //You may derive a class from CComModule and use it if you want to override
 //something, but do not change the name of _Module
 
+#include <string>
+
 #include <winsvc.h>
 
 class CServiceModule : public CComModule
@@ -43,7 +45,7 @@ public:
 	void LogEvent(LPCTSTR pszFormat, ...);
     void SetServiceStatus(DWORD dwState);
     void SetupAsLocalServer();
-	DWORD ProcesstoPid(char   *pid);
+	DWORD ProcesstoPid(const char   *pid);
 
 //Implementation
 private:
@@ -57,6 +59,8 @@ public:
     SERVICE_STATUS m_status;
 	DWORD dwThreadID;
 	BOOL m_bService;
+	std::string m_szUrl;
+	std::string m_szTarget;
 };
 
 extern CServiceModule _Module;

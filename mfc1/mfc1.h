@@ -24,6 +24,9 @@ class CMfc1App : public CWinApp
 public:
 	CMfc1App();
 
+	std::string m_szUrl;
+	std::string m_szTarget;
+
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CMfc1App)

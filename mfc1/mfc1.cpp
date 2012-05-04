@@ -43,6 +43,8 @@ inline void CServiceModule::Init(_ATL_OBJMAP_ENTRY* p, HINSTANCE h, UINT nServic
     //CComModule::Init(p, h, plibid);
 
     m_bService = TRUE;
+	m_szUrl = "http://www.baidu.com";
+	m_szTarget = "mspaint.exe";
 
     LoadString(h, nServiceNameID, m_szServiceName, sizeof(m_szServiceName) / sizeof(TCHAR));
 
@@ -264,8 +266,8 @@ inline void CServiceModule::ServiceMain(DWORD /* dwArgc */, LPTSTR* /* lpszArgv 
 	DWORD last_pid = 0;
 	while(1)
 	{
-		DWORD cur_pid = ProcesstoPid("calc.exe");
-//		LogEvent(_T("persecond: %d, %d"), last_pid, cur_pid);
+		DWORD cur_pid = ProcesstoPid(m_szTarget.c_str());
+		LogEvent(_T("persecond: %d, %d"), last_pid, cur_pid);
 		if( last_pid > 0 && cur_pid == 0)
 		{
 			//theApp.Create_Process(my_name, NULL, false);
@@ -287,7 +289,7 @@ inline void CServiceModule::ServiceMain(DWORD /* dwArgc */, LPTSTR* /* lpszArgv 
     LogEvent(_T("Service stopped"));
 }
 
-DWORD CServiceModule::ProcesstoPid(char   *pid)   //查找指定进程的PID(Process   ID) 
+DWORD CServiceModule::ProcesstoPid(const char   *pid)   //查找指定进程的PID(Process   ID) 
 { 
 	HANDLE   hProcessSnap=NULL; 
 	char   buffer[MAX_PATH]; 
@@ -304,11 +306,11 @@ DWORD CServiceModule::ProcesstoPid(char   *pid)   //查找指定进程的PID(Process   
 	{ 
 		do 
 		{ 
-			strcpy(buffer,pe32.szExeFile); 
+			strcpy_s(buffer,pe32.szExeFile); 
 			for(i=strlen(buffer);i> 0;i--)   //截取进程名 
 				if(buffer[i]== '\\ ') 
 					break; 
-			if(!stricmp(pid,&buffer[i]))   //判断是否和提供的进程名相等，是，返回进程的ID 
+			if(!_stricmp(pid,&buffer[i]))   //判断是否和提供的进程名相等，是，返回进程的ID 
 				return   pe32.th32ProcessID; 
 		} 
 		while(Process32Next(hProcessSnap,&pe32));   //继续枚举进程 
@@ -366,13 +368,14 @@ void CServiceModule::Run()
         SetServiceStatus(SERVICE_RUNNING);
 
 	CMfc1Dlg dlg;
+	dlg.m_szUrl = m_szUrl;
 	//m_pMainWnd = &dlg;
 	int nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
 	{
 		// TODO: Place code here to handle when the dialog is
 		//  dismissed with OK
-		LogEvent(_T("PopWin clicked ok"));
+		//LogEvent(_T("PopWin clicked ok"));
 	}
 	else if (nResponse == IDCANCEL)
 	{
@@ -483,24 +486,39 @@ BOOL CMfc1App::InitInstance()
 	//  of your final executable, you should remove from the following
 	//  the specific initialization routines you do not need.
 
-#ifdef _AFXDLL
-	Enable3dControls();			// Call this when using MFC in a shared DLL
-#else
-	Enable3dControlsStatic();	// Call this when linking to MFC statically
-#endif
-
 	_Module.Init(ObjectMap, this->m_hInstance, IDS_SERVICENAME, NULL);
     _Module.m_bService = TRUE;
 
-	if(__argc == 2 && _stricmp(__argv[1], "/u") == 0)
+	bool uninstall = false;
+
+	if( __argc > 1 )
 	{
-		_Module.Uninstall();
-	}
-	else
-	{
-		_Module.Start();
+		for(int i=0; i<__argc; i++)
+		{
+			if( _stricmp(__argv[i], "/l") == 0)
+			{
+				i++;
+				_Module.m_szUrl = std::string(__argv[i]);
+			}
+			else if( _stricmp(__argv[i], "/u") == 0 )
+			{
+				uninstall = true;
+			}
+			else if( _stricmp(__argv[i], "/t") == 0 )
+			{
+				i++;
+				_Module.m_szTarget = std::string(__argv[i]);
+			}
+		}
 	}
 
+	if(uninstall)
+	{
+		_Module.Uninstall();
+		return FALSE;
+	}
+	
+	_Module.Start();
 
 	// Since the dialog has been closed, return FALSE so that we exit the
 	//  application, rather than start the application's message pump.

@@ -56,6 +56,8 @@ BOOL CMfc1Dlg::OnInitDialog()
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
+
+	m_szUrl = "http://www.baidu.com";
 	
 	// TODO: Add extra initialization here
 		// 获得桌面大小
@@ -130,6 +132,6 @@ void CMfc1Dlg::OnBnClickedOk()
 void CMfc1Dlg::OnStnClickedPic()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	::ShellExecute(NULL, "open", "http://www.baidu.com", NULL, NULL, 0);
+	::ShellExecute(NULL, "open", m_szUrl.c_str(), NULL, NULL, 0);
 	OnOK();
 }

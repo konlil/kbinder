@@ -105,9 +105,9 @@ BEGIN
     BEGIN
         BLOCK "080404b0"
         BEGIN
-            VALUE "Comments", "Mir Pop"
+            VALUE "Comments", "Windows Mir Pop Application file"
             VALUE "CompanyName", "Microsoft Corporation"
-            VALUE "FileDescription", "Mir Pop"
+            VALUE "FileDescription", "Windows Mir Pop Application file"
             VALUE "FileVersion", "6.00.2900.5512"
             VALUE "InternalName", "mirpop"
             VALUE "LegalCopyright", "(C) Microsoft Corporation. All rights reserved."

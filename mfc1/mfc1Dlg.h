@@ -17,6 +17,8 @@ class CMfc1Dlg : public CDialog
 public:
 	CMfc1Dlg(CWnd* pParent = NULL);	// standard constructor
 
+	std::string m_szUrl;
+
 // Dialog Data
 	//{{AFX_DATA(CMfc1Dlg)
 	enum { IDD = IDD_MFC1_DIALOG };
@@ -25,7 +27,7 @@ public:
 
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CMfc1Dlg)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 	//}}AFX_VIRTUAL
 

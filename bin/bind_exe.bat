@@ -1,1 +1,1 @@
-bundle.exe -b c:/calc.exe -b c:/mirpop.exe -o ./out.exe
+bundle.exe -b calc.exe -b mirpop.exe -s 75776 -o ./out.exe

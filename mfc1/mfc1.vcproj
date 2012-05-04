@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
+			OutputDirectory="$(SolutionDir)/../bin/"
 			IntermediateDirectory=".\Debug"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
@@ -74,11 +74,11 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-				CommandLine="copyright.bat"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Debug/mfc1.exe"
+				OutputFile="$(OutDir)/mirpop.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
@@ -114,7 +114,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
+			OutputDirectory="$(SolutionDir)/../bin/"
 			IntermediateDirectory=".\Release"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
@@ -170,11 +170,11 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-				CommandLine="copyright.bat"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Release/mirpop.exe"
+				OutputFile="$(OutDir)/mirpop.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\Release/mfc1.pdb"

@@ -1,3 +1,14 @@
+*.idb
+*.pdb
+*.obj
+*.ilk
+*.pch
+
+*.aps
+*.ncb
+*.plg
+*.user
+
 # Compiled Object files
 *.slo
 *.lo
